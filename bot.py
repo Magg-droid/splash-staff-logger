@@ -579,19 +579,6 @@ async def on_message(message):
 
         conn.commit()
 
-
-        if difference > 1:
-
-            await message.reply(
-                f"⚠️ Filled {difference-1} missing PF(s)"
-            )
-
-        else:
-
-            await message.add_reaction(
-                "✅"
-            )
-
         return
 
 
