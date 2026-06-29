@@ -63,17 +63,36 @@ def is_staff(user):
         []
     )
 
-    # must have Staff role
+    print(
+        f"USER: {user.name}"
+    )
+
+    print(
+        f"ROLE IDS: {role_ids}"
+    )
+
+    print(
+        f"STAFF ROLE: {STAFF_ROLE}"
+    )
+
     has_staff = STAFF_ROLE in role_ids
 
-    # managers excluded
     is_management = any(
         role_id in MANAGEMENT_ROLES
         for role_id in role_ids
     )
 
+    print(
+        f"HAS STAFF: {has_staff}"
+    )
+
+    print(
+        f"IS MANAGEMENT: {is_management}"
+    )
+
     return (
-        has_staff and
+        has_staff
+        and
         not is_management
     )
 
