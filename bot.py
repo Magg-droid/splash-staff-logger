@@ -38,6 +38,8 @@ bot = commands.Bot(
 
 def is_manager(user):
 
+    print(user)
+
     if user is None:
         return False
 
