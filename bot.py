@@ -120,7 +120,11 @@ async def staff(
     member: discord.Member
 ):
 
-    if not is_manager(interaction.user):
+    member = interaction.guild.get_member(
+        interaction.user.id
+    )
+
+    if not is_manager(member):
 
         await interaction.response.send_message(
             "Managers only.",
@@ -169,7 +173,11 @@ async def leaderboard(
     interaction: discord.Interaction
 ):
 
-    if not is_manager(interaction.user):
+    member = interaction.guild.get_member(
+        interaction.user.id
+    )
+    
+    if not is_manager(member):
 
         await interaction.response.send_message(
             "Managers only.",
@@ -235,7 +243,11 @@ async def inactive(
     days: int = 0
 ):
 
-    if not is_manager(interaction.user):
+    member = interaction.guild.get_member(
+        interaction.user.id
+    )
+
+    if not is_manager(member):
 
         await interaction.response.send_message(
             "Managers only.",
@@ -336,7 +348,11 @@ async def wipe_database(
     confirm: str
 ):
 
-    if not is_manager(interaction.user):
+    member = interaction.guild.get_member(
+        interaction.user.id
+    )
+
+    if not is_manager(member):
 
         await interaction.response.send_message(
             "Managers only.",
