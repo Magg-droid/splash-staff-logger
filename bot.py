@@ -38,6 +38,10 @@ bot = commands.Bot(
 
 def is_manager(user):
 
+    print(
+        [role.id for role in user.roles]
+    )
+
     return any(
         role.id in MANAGEMENT_ROLES
         for role in user.roles
