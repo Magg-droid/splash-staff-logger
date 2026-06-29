@@ -250,6 +250,7 @@ async def inactive(
     if not is_manager(interaction.guild.get_member(interaction.user.id) or interaction.user):
 
         print(interaction.user)
+        print(interaction.user._roles)
         print(type(interaction.user))
         print(getattr(interaction.user, "roles", "NO ROLES"))
 
