@@ -38,16 +38,17 @@ bot = commands.Bot(
 
 def is_manager(user):
 
-    print(user)
-
     if user is None:
         return False
 
-    roles = getattr(user, "roles", [])
+    role_ids = [
+        role.id
+        for role in user.roles
+    ]
 
     return any(
-        role.id in MANAGEMENT_ROLES
-        for role in roles
+        role_id in MANAGEMENT_ROLES
+        for role_id in role_ids
     )
 
 
@@ -240,7 +241,7 @@ async def inactive(
     days: int = 0
 ):
 
-    if not is_manager(interaction.user):
+    if not is_manager(interaction.guild.get_member(interaction.user.id) or interaction.user):
 
         await interaction.response.send_message(
             "Managers only.",
