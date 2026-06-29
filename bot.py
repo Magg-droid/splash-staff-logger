@@ -90,8 +90,9 @@ def get_staff(user):
 @bot.event
 async def on_ready():
 
+    await bot.wait_until_ready()
+
     print("BOT:", bot.user)
-    print("GUILD_ID:", GUILD_ID)
 
     for guild in bot.guilds:
         print(
@@ -100,19 +101,14 @@ async def on_ready():
 
     try:
 
-        guild = discord.Object(
-            id=GUILD_ID
-        )
-
-        synced = await bot.tree.sync(
-            guild=guild
-        )
+        synced = await bot.tree.sync()
 
         print(
             f"Synced {len(synced)} commands"
         )
 
     except Exception as e:
+
         print(
             f"SYNC ERROR: {e}"
         )
