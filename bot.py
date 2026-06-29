@@ -43,11 +43,6 @@ def is_manager(user):
 
     roles = getattr(user, "roles", [])
 
-    print(
-        "ROLES:",
-        [f"{r.name}:{r.id}" for r in roles]
-    )
-
     return any(
         role.id in MANAGEMENT_ROLES
         for role in roles
@@ -127,16 +122,7 @@ async def staff(
     member: discord.Member
 ):
 
-    member = interaction.guild.get_member(
-        interaction.user.id
-    )
-    
-    if member is None:
-        member = await interaction.guild.fetch_member(
-            interaction.user.id
-        )
-    
-    if not is_manager(member):
+    if not is_manager(interaction.user):
 
         await interaction.response.send_message(
             "Managers only.",
@@ -185,16 +171,7 @@ async def leaderboard(
     interaction: discord.Interaction
 ):
 
-    member = interaction.guild.get_member(
-        interaction.user.id
-    )
-    
-    if member is None:
-        member = await interaction.guild.fetch_member(
-            interaction.user.id
-        )
-    
-    if not is_manager(member):
+    if not is_manager(interaction.user):
 
         await interaction.response.send_message(
             "Managers only.",
@@ -260,16 +237,7 @@ async def inactive(
     days: int = 0
 ):
 
-    member = interaction.guild.get_member(
-        interaction.user.id
-    )
-    
-    if member is None:
-        member = await interaction.guild.fetch_member(
-            interaction.user.id
-        )
-    
-    if not is_manager(member):
+    if not is_manager(interaction.user):
 
         await interaction.response.send_message(
             "Managers only.",
@@ -370,16 +338,7 @@ async def wipe_database(
     confirm: str
 ):
 
-    member = interaction.guild.get_member(
-        interaction.user.id
-    )
-    
-    if member is None:
-        member = await interaction.guild.fetch_member(
-            interaction.user.id
-        )
-    
-    if not is_manager(member):
+    if not is_manager(interaction.user):
 
         await interaction.response.send_message(
             "Managers only.",
