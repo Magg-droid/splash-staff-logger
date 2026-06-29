@@ -38,9 +38,8 @@ bot = commands.Bot(
 
 def is_manager(user):
 
-    print(
-        [role.id for role in user.roles]
-    )
+    print("USER:", user)
+    print("ROLES:", [f"{r.name}:{r.id}" for r in user.roles])
 
     return any(
         role.id in MANAGEMENT_ROLES
