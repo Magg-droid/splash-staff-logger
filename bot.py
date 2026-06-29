@@ -130,7 +130,12 @@ async def staff(
     member = interaction.guild.get_member(
         interaction.user.id
     )
-
+    
+    if member is None:
+        member = await interaction.guild.fetch_member(
+            interaction.user.id
+        )
+    
     if not is_manager(member):
 
         await interaction.response.send_message(
@@ -183,6 +188,11 @@ async def leaderboard(
     member = interaction.guild.get_member(
         interaction.user.id
     )
+    
+    if member is None:
+        member = await interaction.guild.fetch_member(
+            interaction.user.id
+        )
     
     if not is_manager(member):
 
@@ -253,7 +263,12 @@ async def inactive(
     member = interaction.guild.get_member(
         interaction.user.id
     )
-
+    
+    if member is None:
+        member = await interaction.guild.fetch_member(
+            interaction.user.id
+        )
+    
     if not is_manager(member):
 
         await interaction.response.send_message(
@@ -358,7 +373,12 @@ async def wipe_database(
     member = interaction.guild.get_member(
         interaction.user.id
     )
-
+    
+    if member is None:
+        member = await interaction.guild.fetch_member(
+            interaction.user.id
+        )
+    
     if not is_manager(member):
 
         await interaction.response.send_message(
