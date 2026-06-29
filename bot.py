@@ -40,13 +40,11 @@ bot = commands.Bot(
 
 def is_manager(user):
 
-    if user is None:
-        return False
-
-    role_ids = [
-        role.id
-        for role in user.roles
-    ]
+    role_ids = getattr(
+        user,
+        "_roles",
+        []
+    )
 
     return any(
         role_id in MANAGEMENT_ROLES
