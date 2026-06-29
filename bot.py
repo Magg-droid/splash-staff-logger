@@ -90,6 +90,14 @@ def get_staff(user):
 @bot.event
 async def on_ready():
 
+    print("BOT:", bot.user)
+    print("GUILD_ID:", GUILD_ID)
+
+    for guild in bot.guilds:
+        print(
+            f"CONNECTED TO: {guild.name} ({guild.id})"
+        )
+
     try:
 
         guild = discord.Object(
@@ -106,7 +114,7 @@ async def on_ready():
 
     except Exception as e:
         print(
-            f"Sync error: {e}"
+            f"SYNC ERROR: {e}"
         )
 
     print(
