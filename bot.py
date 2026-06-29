@@ -19,6 +19,7 @@ MANAGER_ROLE = int(os.getenv("MANAGER_ROLE_ID"))
 GENERAL_MANAGER_ROLE = int(
     os.getenv("GENERAL_MANAGER_ROLE_ID")
 )
+STAFF_ROLE = int(os.getenv("STAFF_ROLE_ID"))
 
 MANAGEMENT_ROLES = [
     OWNER_ROLE,
@@ -51,6 +52,30 @@ def is_manager(user):
         for role_id in role_ids
     )
 
+def is_staff(user):
+
+    if user is None:
+        return False
+
+    role_ids = getattr(
+        user,
+        "_roles",
+        []
+    )
+
+    # must have Staff role
+    has_staff = STAFF_ROLE in role_ids
+
+    # managers excluded
+    is_management = any(
+        role_id in MANAGEMENT_ROLES
+        for role_id in role_ids
+    )
+
+    return (
+        has_staff and
+        not is_management
+    )
 
 def get_staff(user):
 
@@ -539,6 +564,9 @@ async def on_message(message):
         return
 
     if message.channel.id != TIMECLOCK_CHANNEL:
+        return
+
+    if not is_staff(message.author):
         return
 
     content = message.content.upper().strip()
