@@ -585,31 +585,80 @@ async def on_message(message):
     if message.channel.id != TIMECLOCK_CHANNEL:
         return
 
-    if not is_staff(message.author):
-    
-        print(
-            f"IGNORED: {message.author.name}"
-        )
-    
-        print(
-            f"ROLE IDS: {getattr(message.author,'_roles',[])}"
-        )
-    
-        return
-
     content = message.content.upper().strip()
 
     manager = is_manager(
         message.author
     )
 
-    # Ignore manager advertising
+    # Payment handling first (managers only)
+    paid = re.match(
+        r"^>PAID\s+.+<$",
+        message.content.strip(),
+        re.IGNORECASE
+    )
+
+    if paid and manager:
+
+        if not message.mentions:
+            return
+
+        staff_user = message.mentions[0]
+
+        cursor.execute(
+            "SELECT * FROM staff WHERE user_id=?",
+            (staff_user.id,)
+        )
+
+        row = cursor.fetchone()
+
+        if not row:
+            return
+
+        completed = row[2]
+
+        cursor.execute("""
+        INSERT INTO payments(
+            user_id,
+            username,
+            completed_pf,
+            payment_date
+        )
+        VALUES(?,?,?,?)
+        """,
+        (
+            row[0],
+            row[1],
+            completed,
+            str(datetime.now())
+        ))
+
+        cursor.execute("""
+        UPDATE staff
+        SET current_pf=0
+        WHERE user_id=?
+        """,
+        (
+            row[0],
+        ))
+
+        conn.commit()
+
+        return
+
+
+    # Ignore manager advertisements
     if manager and content in [
         "PFA",
         "PFC",
         "PFA+C",
         "PFC+A"
     ]:
+        return
+
+
+    # Only actual staff tracked
+    if not is_staff(message.author):
         return
 
 
@@ -633,12 +682,10 @@ async def on_message(message):
 
         current = row[2]
 
-        expected = current + 1
-
         if number <= current:
 
             await message.reply(
-                f"Expected #{expected} or higher"
+                f"Expected #{current+1} or higher"
             )
 
             return
@@ -647,7 +694,6 @@ async def on_message(message):
         difference = (
             number - current
         )
-
 
         cursor.execute("""
         UPDATE staff
@@ -668,71 +714,6 @@ async def on_message(message):
         conn.commit()
 
         return
-
-
-    # Payment handling
-
-    paid = re.match(
-        r"^>PAID\s+.+<$",
-        message.content.strip(),
-        re.IGNORECASE
-    )
-
-    if paid and manager:
-
-        if not message.mentions:
-            return
-
-
-        staff_user = message.mentions[0]
-
-
-        cursor.execute(
-            "SELECT * FROM staff WHERE user_id=?",
-            (staff_user.id,)
-        )
-
-        row = cursor.fetchone()
-
-        if not row:
-            return
-
-
-        completed = row[2]
-
-
-        # Keep payment history silently
-        cursor.execute("""
-        INSERT INTO payments(
-            user_id,
-            username,
-            completed_pf,
-            payment_date
-        )
-        VALUES(?,?,?,?)
-        """,
-        (
-            row[0],
-            row[1],
-            completed,
-            str(datetime.now())
-        ))
-
-
-        # Reset PF count after payment
-        cursor.execute("""
-        UPDATE staff
-        SET current_pf=0
-        WHERE user_id=?
-        """,
-        (
-            row[0],
-        ))
-
-        conn.commit()
-
-        return
-
 
     await bot.process_commands(message)
 
