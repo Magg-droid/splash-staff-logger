@@ -586,6 +586,15 @@ async def on_message(message):
         return
 
     if not is_staff(message.author):
+    
+        print(
+            f"IGNORED: {message.author.name}"
+        )
+    
+        print(
+            f"ROLE IDS: {getattr(message.author,'_roles',[])}"
+        )
+    
         return
 
     content = message.content.upper().strip()
