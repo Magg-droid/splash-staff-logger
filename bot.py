@@ -38,6 +38,8 @@ bot = commands.Bot(
 
 def is_manager(user):
 
+    print(user)
+
     if user is None:
         return False
 
@@ -87,17 +89,19 @@ def get_staff(user):
 @bot.event
 async def on_ready():
 
+    if getattr(bot, "synced", False):
+        print(f"{bot.user} online")
+        return
+
     try:
 
         guild = discord.Object(id=GUILD_ID)
 
-        bot.tree.copy_global_to(
-            guild=guild
-        )
-
         synced = await bot.tree.sync(
             guild=guild
         )
+
+        bot.synced = True
 
         print(
             f"Synced {len(synced)} commands"
@@ -107,7 +111,6 @@ async def on_ready():
         print(e)
 
     print(f"{bot.user} online")
-
 
 # ======================
 # STAFF STATS
