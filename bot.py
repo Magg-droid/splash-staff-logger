@@ -12,9 +12,19 @@ load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 TIMECLOCK_CHANNEL = int(os.getenv("TIMECLOCK_CHANNEL_ID"))
-MANAGER_ROLE = int(os.getenv("MANAGER_ROLE_ID"))
 GUILD_ID = int(os.getenv("GUILD_ID"))
 MANAGEMENT_CHANNEL = int(os.getenv("MANAGEMENT_CHANNEL"))
+OWNER_ROLE = int(os.getenv("OWNER_ROLE_ID"))
+MANAGER_ROLE = int(os.getenv("MANAGER_ROLE_ID"))
+GENERAL_MANAGER_ROLE = int(
+    os.getenv("GENERAL_MANAGER_ROLE_ID")
+)
+
+MANAGEMENT_ROLES = [
+    OWNER_ROLE,
+    MANAGER_ROLE,
+    GENERAL_MANAGER_ROLE
+]
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -26,8 +36,12 @@ bot = commands.Bot(
 )
 
 
-def is_manager(member):
-    return MANAGER_ROLE in [r.id for r in member.roles]
+def is_manager(user):
+
+    return any(
+        role.id in MANAGEMENT_ROLES
+        for role in user.roles
+    )
 
 
 def get_staff(user):
