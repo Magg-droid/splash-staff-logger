@@ -579,6 +579,10 @@ async def wipe_database(
 @bot.event
 async def on_message(message):
 
+    print(
+        f"MESSAGE: {message.author} -> {message.content}"
+    )
+
     if message.author.bot:
         return
 
