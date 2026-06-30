@@ -138,6 +138,8 @@ async def on_ready():
 
     print("BOT:", bot.user)
 
+    print("Guild count:", len(bot.guilds))
+
     for guild in bot.guilds:
         print(
             f"CONNECTED TO: {guild.name} ({guild.id})"
